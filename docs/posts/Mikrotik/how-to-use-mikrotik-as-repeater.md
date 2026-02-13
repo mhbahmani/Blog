@@ -19,7 +19,7 @@ A mikrotik can be used as a repeater to widen the range of wifi reachability. He
 
 <!-- more -->
 
-Setting up a Mikrotik as a repeater is as easy as connecting to an ordinary router.
+Setting up a Mikrotik as a repeater is as easy as connecting to an ordinary router in other devices.
 The only thing you need to do is to connect to router admin interface, go to wireless settings and click on "Setup Repeater" button.
 
 ![Setup Repeater](./images/how-to-use-mikrotik-as-repeater//setup-repeater.png)
