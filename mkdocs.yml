@@ -1,0 +1,48 @@
+site_name: MohammadHosein's Treasury
+
+theme:
+  name: material
+  features:
+    - navigation.footer
+  palette:
+    # Dark Mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark mode
+      primary: green
+      accent: deep purple
+    # Light Mode
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light mode
+      primary: blue
+      accent: deep orange
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+      - name: mermaid
+        class: mermaid
+        format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra:
+  social:
+    - icon: material/linkedin
+      link: https://www.linkedin.com/in/mohammad-hosein-bahmani-ab6b7911b/
+    - icon: simple/telegram
+      link: https://t.me/mhbahmani
+    - icon: material/twitter
+      link: https://x.com/mh_bahmani
+# copyright: Copyright &copy; 2024 James Willett  
