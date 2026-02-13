@@ -8,8 +8,21 @@ repo_name: mhbahmani/blog
 theme:
   name: material
   features:
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+    # - navigation.tabs
+    # - navigation.sections
     - navigation.footer
     - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
   palette:
     # Dark Mode
     - scheme: slate
@@ -31,17 +44,25 @@ markdown_extensions:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
-  - admonition
-  - pymdownx.details
   - pymdownx.inlinehilite
   - pymdownx.snippets
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
+  - footnotes
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.mark
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - md_in_html
   - pymdownx.superfences:
       custom_fences:
-      - name: mermaid
-        class: mermaid
-        format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.tabbed:
-      alternate_style: true
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 plugins:
   - blog:
@@ -89,3 +110,6 @@ extra:
     - icon: material/twitter
       link: https://x.com/mh_bahmani
 # copyright: Copyright &copy; 2026 MohammadHosein Bahmani
+
+extra_css:
+  - stylesheets/extra.css
