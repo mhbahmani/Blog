@@ -1,9 +1,15 @@
 site_name: MohammadHosein's Treasury
+site_description: Personal blog of MohammadHosein
+site_url: https://blog.mhbahmani.ir
+site_author: MohammadHosein Bahmani
+repo_url: https://github.com/mhbahmani/blog
+repo_name: mhbahmani/blog
 
 theme:
   name: material
   features:
     - navigation.footer
+    - navigation.indexes
   palette:
     # Dark Mode
     - scheme: slate
@@ -37,6 +43,43 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
 
+plugins:
+  - blog:
+      blog_dir: .
+      post_dir: ./posts
+      blog_toc: true
+      post_url_format: "{slug}"
+  # - glightbox:
+  #     touchNavigation: false
+  #     loop: false
+  #     effect: zoom
+  #     width: 100%
+  #     height: auto
+  #     zoomable: true
+  #     draggable: true
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  # - minify:
+  #     minify_html: true
+  - tags:
+      tags_file: tags.md
+  - privacy:
+      links: 
+      links_attr_map:
+        target: _blank
+      links_noopener: true
+      enabled: true
+      assets_exclude:
+        - cdn.jsdelivr.net/npm/mathjax@3/*
+        - giscus.app/*
+  # - rss:
+  #     match_path: "posts/.*"
+  #     pretty_print: false
+  #     rss_feed_enabled: true
+  #     date_from_meta:
+  #       as_creation: date.created
+  #       as_update: date.updated
+
 extra:
   social:
     - icon: material/linkedin
@@ -45,4 +88,4 @@ extra:
       link: https://t.me/mhbahmani
     - icon: material/twitter
       link: https://x.com/mh_bahmani
-# copyright: Copyright &copy; 2024 James Willett  
+# copyright: Copyright &copy; 2026 MohammadHosein Bahmani
