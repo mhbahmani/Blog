@@ -17,6 +17,8 @@ tags:
 
 A comprehensive reference for debugging cross-cluster service discovery and endpoint propagation issues in an Istio multi-network, multi-primary setup.
 
+<!-- more -->
+
 ## Context
 
 This guide was written while debugging a specific issue: in a multi-primary, multi-network setup between two clusters (`cluster-2` and `cluster-1`), services from the remote cluster were being **discovered** but their **endpoints were not appearing** in local sidecars, causing 503 errors.

@@ -14,6 +14,10 @@ tags:
 
 # Troubleshooting Fibre Channel SAN Multipath: Missing Devices & "LUNZ" Issue
 
+This is a guide to troubleshoot a Fibre Channel SAN Multipath issue on a bare-metal Ubuntu server. The main purpose of this guide is to getting familiar with the commands and procedures to troubleshoot such issues.
+
+<!-- more -->
+
 ## 📝 Problem Summary
 A bare-metal Ubuntu server was physically connected to a Fibre Channel (FC) SAN. The multipath service was installed and running, but no device-mapper multipath devices (e.g., `/dev/mapper/mpathX`) were being created. 
 
