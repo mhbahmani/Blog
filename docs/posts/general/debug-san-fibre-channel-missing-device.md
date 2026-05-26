@@ -16,6 +16,8 @@ tags:
 
 This is a guide to troubleshoot a Fibre Channel SAN Multipath issue on a bare-metal Ubuntu server. The main purpose of this guide is to getting familiar with the commands and procedures to troubleshoot such issues.
 
+![Fibre Channel SAN Multipath](./images/fibre.jpg)
+
 <!-- more -->
 
 ## 📝 Problem Summary

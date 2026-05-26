@@ -17,6 +17,8 @@ tags:
 
 A comprehensive reference for debugging cross-cluster service discovery and endpoint propagation issues in an Istio multi-network, multi-primary setup.
 
+![Istio Multi-Cluster East-West Architecture](./images/istio-east-west-arch.svg)
+
 <!-- more -->
 
 ## Context
