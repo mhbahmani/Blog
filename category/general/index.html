@@ -699,7 +699,7 @@
           
           <li class="md-meta__item">
             
-              3 min read
+              4 min read
             
           </li>
         
@@ -710,94 +710,15 @@
   </header>
   <div class="md-post__content md-typeset">
     <h2 id="troubleshooting-fibre-channel-san-multipath-missing-devices-lunz-issue"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/">Troubleshooting Fibre Channel SAN Multipath: Missing Devices &amp; "LUNZ" Issue</a></h2>
-<h3 id="problem-summary"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#problem-summary">📝 Problem Summary</a></h3>
-<p>A bare-metal Ubuntu server was physically connected to a Fibre Channel (FC) SAN. The multipath service was installed and running, but no device-mapper multipath devices (e.g., <code>/dev/mapper/mpathX</code>) were being created. </p>
-<h3 id="root-cause"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#root-cause">🔍 Root Cause</a></h3>
-<p>The issue was <strong>not</strong> with the Ubuntu OS or the multipath configuration. The root cause was an incorrect/missing <strong>WWPN (World Wide Port Name) mapping</strong> on the SAN Storage Array. </p>
-<p>Because the server's WWPNs were not properly mapped to a real Storage Volume (LUN) on the array, the storage array presented fake "dummy" LUNs to the server. The OS saw these as <code>0-Byte</code> disks. The Linux device mapper (multipath) automatically ignores <code>0-Byte</code> disks, which is why no multipath devices were created.</p>
-<hr />
-<h3 id="step-by-step-troubleshooting-guide"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#step-by-step-troubleshooting-guide">🛠️ Step-by-Step Troubleshooting Guide</a></h3>
-<p>Below are the commands used to diagnose the issue, what each command does, and the actual outputs that led to the solution.</p>
-<h4 id="step-1-verify-physical-fibre-channel-link"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#step-1-verify-physical-fibre-channel-link">Step 1: Verify Physical Fibre Channel Link</a></h4>
-<p><strong>Command:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_state
-</span></code></pre></div>
-<strong>What it does:</strong> Checks the physical link status of the Host Bus Adapters (HBAs) to see if they are successfully talking to the SAN switch/fabric.
-<strong>Result:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Online
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Online
-</span></code></pre></div>
-<em>Conclusion:</em> The physical fiber cables, SFPs, and SAN switch zoning were working perfectly.</p>
-<h4 id="step-2-rescan-the-scsi-bus"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#step-2-rescan-the-scsi-bus">Step 2: Rescan the SCSI Bus</a></h4>
-<p><strong>Command:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*/scan<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span><span class="nv">$host</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
-</span></code></pre></div>
-<strong>What it does:</strong> Forces the Linux kernel to rescan the SCSI host adapters for new storage targets and LUNs.
-<strong>Result:</strong> 
-<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>- - -
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>- - -
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>- - -
-</span></code></pre></div>
-<em>Conclusion:</em> The rescan signals were successfully sent to the HBAs.</p>
-<h4 id="step-3-verify-multipath-service-status"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#step-3-verify-multipath-service-status">Step 3: Verify Multipath Service Status</a></h4>
-<p><strong>Command:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>multipathd
-</span></code></pre></div>
-<strong>What it does:</strong> Checks if the Multipath Daemon is running and actively monitoring block devices.
-<strong>Result:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>● multipathd.service - Device-Mapper Multipath Device Controller
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>     Loaded: loaded (/usr/lib/systemd/system/multipathd.service; enabled; preset: enabled)
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>     Active: active (running)
-</span></code></pre></div>
-<em>Conclusion:</em> The multipath service was healthy and running.</p>
-<h4 id="step-4-check-os-block-devices-the-first-clue"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#step-4-check-os-block-devices-the-first-clue">Step 4: Check OS Block Devices (The First Clue)</a></h4>
-<p><strong>Command:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>lsblk
-</span></code></pre></div>
-<strong>What it does:</strong> Lists all block storage devices attached to the system and their respective sizes.
-<strong>Result:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
-</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>sda      8:0    0  4.4T  0 disk 
-</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>├─sda1   8:1    0    1G  0 part /boot/efi
-</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>└─sda2   8:2    0  4.4T  0 part /
-</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>sdb      8:16   0    0B  0 disk 
-</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>sdc      8:32   0    0B  0 disk 
-</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>sdd      8:48   0    0B  0 disk 
-</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>sde      8:64   0    0B  0 disk 
-</span></code></pre></div>
-<em>Conclusion:</em> The OS saw 4 paths from the SAN (<code>sdb</code>, <code>sdc</code>, <code>sdd</code>, <code>sde</code>), but they all had a size of <strong>0B (0 Bytes)</strong>. Device Mapper cannot build multipath devices out of 0-byte disks.</p>
-<h4 id="step-5-deep-dive-with-scsi-rescan-script-the-smoking-gun"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#step-5-deep-dive-with-scsi-rescan-script-the-smoking-gun">Step 5: Deep Dive with SCSI Rescan Script (The Smoking Gun)</a></h4>
-<p><strong>Command:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>sudo<span class="w"> </span>rescan-scsi-bus.sh<span class="w"> </span>-r
-</span></code></pre></div></p>
-<p><a href="https://bash.cyberciti.biz/diskadmin/rescan-linux-scsi-bus/" target="_blank" rel="noopener">Here</a> is the documentation for the rescan-scsi-bus.sh script.</p>
-<p><strong>What it does:</strong> A robust script that syncs filesystems, scans for new/changed/removed SCSI devices, and queries the hardware for Vendor and Model information.
-<strong>Result:</strong> <em>(Note: This command took a very long time to run due to I/O timeouts on the 0-byte disks).</em>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a> Scanning for device 1 0 0 0 ... 
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>OLD: Host: scsi1 Channel: 00 Id: 00 Lun: 00
-</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>      Vendor: DGC      Model: LUNZ             Rev: 5201
-</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>      Type:   Direct-Access                    ANSI SCSI revision: 06
-</span></code></pre></div>
-<em>Conclusion:</em> The hardware reported the Vendor as <strong>DGC</strong> (Dell/EMC) and the Model as <strong>LUNZ</strong>. 
-* <strong>LUNZ</strong> is a pseudo-LUN. Dell EMC storage arrays present a "LUNZ" to a server when the server is physically connected, but no actual data LUNs have been mapped to that server's WWPNs.</p>
-<hr />
-<h3 id="resolution"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#resolution">✅ Resolution</a></h3>
-<p>To fix the issue, the exact WWPNs of the server needed to be retrieved and configured on the SAN Storage Array.</p>
-<h4 id="1-retrieve-the-server-wwpns"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#1-retrieve-the-server-wwpns">1. Retrieve the Server WWPNs</a></h4>
-<p><strong>Command:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_name
-</span></code></pre></div>
-<strong>What it does:</strong> Outputs the World Wide Port Names (WWPNs) of the server's Fibre Channel HBAs.
-<strong>Result:</strong> Returns two 16-character hexadecimal strings (e.g., <code>0x100000109bXXXXXX</code>).</p>
-<h4 id="2-fix-mapping-on-the-san-storage"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#2-fix-mapping-on-the-san-storage">2. Fix Mapping on the SAN Storage</a></h4>
-<p>The WWPNs retrieved in the previous step were provided to the Storage Administrator (or entered into the Storage Array UI). 
-* The WWPNs were properly registered in the Storage Host Group.
-* A real Storage LUN (e.g., a 2TB volume) was mapped to the host, overriding the fake <code>LUNZ</code>.</p>
-<h4 id="3-final-verification"><a class="toclink" href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/#3-final-verification">3. Final Verification</a></h4>
-<p>After the SAN team corrected the WWPN mapping:
-1. Ran <code>sudo rescan-scsi-bus.sh -r</code> again (the script ran instantly this time).
-2. Ran <code>lsblk</code> — the disks <code>sdb</code>, <code>sdc</code>, <code>sdd</code>, <code>sde</code> now showed their real size instead of <code>0B</code>.
-3. Ran <code>sudo multipath -ll</code> — the device mapper successfully aggregated the disks into a single multipath volume (e.g., <code>/dev/mapper/mpatha</code>), ready to be formatted and mounted.</p>
+<p>This is a guide to troubleshoot a Fibre Channel SAN Multipath issue on a bare-metal Ubuntu server. The main purpose of this guide is to getting familiar with the commands and procedures to troubleshoot such issues.</p>
+<p><img alt="Fibre Channel SAN Multipath" src="../../general/images/fibre.jpg" /></p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/">
+          Continue reading
+        </a>
+      </nav>
     
     
   </div>

@@ -1075,6 +1075,9 @@
 
 <h1 id="istio-multi-cluster-east-west-debugging-guide">Istio Multi-Cluster East-West Debugging Guide</h1>
 <p>A comprehensive reference for debugging cross-cluster service discovery and endpoint propagation issues in an Istio multi-network, multi-primary setup.</p>
+<p><img alt="Istio Multi-Cluster East-West Architecture" src="../Istio/images/istio-east-west-arch.svg" /></p>
+<!-- more -->
+
 <h2 id="context">Context</h2>
 <p>This guide was written while debugging a specific issue: in a multi-primary, multi-network setup between two clusters (<code>cluster-2</code> and <code>cluster-1</code>), services from the remote cluster were being <strong>discovered</strong> but their <strong>endpoints were not appearing</strong> in local sidecars, causing 503 errors.</p>
 <p>The root cause turned out to be that <strong>MCS (Multi-Cluster Services) mode was accidentally enabled</strong> on istiod, causing remote endpoints to be registered under <code>*.svc.clusterset.local</code> hostnames instead of <code>*.svc.cluster.local</code>. This guide documents the debugging journey and all the useful commands along the way.</p>
