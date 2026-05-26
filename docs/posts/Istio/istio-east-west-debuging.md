@@ -1,3 +1,18 @@
+---
+date: 2026-05-23
+authors: [mohammadhosein]
+description: >
+  Istio Multi-Cluster East-West Debugging Guide
+categories:
+  - Istio
+tags:
+  - Devops
+  - Istio
+  - Envoy
+  - East-West
+---
+
+
 # Istio Multi-Cluster East-West Debugging Guide
 
 A comprehensive reference for debugging cross-cluster service discovery and endpoint propagation issues in an Istio multi-network, multi-primary setup.
