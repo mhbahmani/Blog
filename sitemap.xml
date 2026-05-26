@@ -2,22 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://blog.mhbahmani.ir/</loc>
-         <lastmod>2026-02-14</lastmod>
+         <lastmod>2026-05-26</lastmod>
     </url>
     <url>
          <loc>https://blog.mhbahmani.ir/tags/</loc>
-         <lastmod>2026-02-14</lastmod>
+         <lastmod>2026-05-26</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.mhbahmani.ir/istio-multi-cluster-east-west-debugging-guide/</loc>
+         <lastmod>2026-05-26</lastmod>
     </url>
     <url>
          <loc>https://blog.mhbahmani.ir/use-a-mikrotik-as-a-repeater/</loc>
-         <lastmod>2026-02-14</lastmod>
+         <lastmod>2026-05-26</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.mhbahmani.ir/troubleshooting-fibre-channel-san-multipath-missing-devices--lunz-issue/</loc>
+         <lastmod>2026-05-26</lastmod>
     </url>
     <url>
          <loc>https://blog.mhbahmani.ir/archive/2026/</loc>
-         <lastmod>2026-02-14</lastmod>
+         <lastmod>2026-05-26</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.mhbahmani.ir/category/istio/</loc>
+         <lastmod>2026-05-26</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.mhbahmani.ir/category/general/</loc>
+         <lastmod>2026-05-26</lastmod>
     </url>
     <url>
          <loc>https://blog.mhbahmani.ir/category/mikrotik/</loc>
-         <lastmod>2026-02-14</lastmod>
+         <lastmod>2026-05-26</lastmod>
     </url>
 </urlset>
